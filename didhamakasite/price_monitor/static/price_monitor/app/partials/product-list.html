@@ -1,0 +1,74 @@
+<center ng-hide="products.length == 0">
+    <pagination total-items="productCount" ng-model="currentPage" max-size="maxPageCount" class="pagination-sm" boundary-links="true" rotate="false" num-pages="pagesTotal" items-per-page="itemsPerPage"></pagination>
+</center>
+<div class="media list" ng-repeat="product in products | startFrom:(currentPage-1)*itemsPerPage | limitTo:itemsPerPage">
+    <a class="pull-left" href="{{ product.offer_url }}"
+       ng-if="product.image_urls.small">
+        <img class="media-object" ng-src="{{ product.image_urls.small }}"
+             alt="{{ product.title }}">
+    </a>
+
+        <div class="media-body">
+            <h4 class="media-heading">
+                <button class="btn btn-xs btn-danger pull-right" ng-click="openProductDelete(product)" type="button" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <a href="#/products/{{ product.asin }}">
+                    <span ng-if="product.artist">{{ product.artist }}: </span>{{ product.title }}
+                </a>
+            </h4>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">Price:</div>
+                        <div class="col-xs-10 col-md-11">
+                            <span ng-if="product.current_price.value">{{ product.current_price.currency }} {{ product.current_price.value | number: 2 }}</span>
+                            <span ng-if="!product.current_price.value">No price available</span> (as of {{ product.current_price.date_seen | date: 'MMMM d, y hh:mm a Z' }} - <span data-toggle="tooltip" data-placement="top" title="Product prices and availability are accurate as of the date/time indicated and are subject to change. Any price and availability information displayed on {{ siteName }} at the time of purchase will apply to the purchase of this product.">Details</span>)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">Limit:</div>
+                        <div class="col-xs-10 col-md-11">{{ product.current_price.currency || product.highest_price.currency || product.lowest_price.currency }} <span ng-repeat="subscription in product.subscription_set"><span editable-number="subscription.price_limit" e-step="0.01" onaftersave="product.$update()">{{ subscription.price_limit | number: 2 }}</span>{{ $last ? '' : ', ' }}</div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <a href="#/products/{{ product.asin }}">
+                        <img class="sparkline" ng-src="{{ product.getSparklineUrl() }}" />
+                    </a>
+                </div>
+            </div>
+        </div>
+</div>
+<center ng-hide="products.length == 0">
+    <pagination total-items="productCount" ng-model="currentPage" max-size="maxPageCount" class="pagination-sm" boundary-links="true" rotate="false" num-pages="pagesTotal" items-per-page="itemsPerPage"></pagination>
+</center>
+
+<form novalidate name="product_form" id="product-form" class="form-inline">
+    <div ng-repeat="product in newProducts" class="row">
+        <ng-form name="innerForm">
+        <div class="col-xs-4 form-group" ng-class="{ 'has-error' : innerForm.asin.$invalid && innerForm.asin.$dirty}">
+                <input class="form-control" type="text" name="asin" ng-model="product.asin" placeholder="ASIN" required ng-pattern="/[A-Z0-9]/" />
+            </div>
+            <div class="col-xs-4 form-group" ng-class="{ 'has-error' : innerForm.subscription_set[0].email_notification.email.$invalid && innerForm.subscription_set[0].email_notification.email.$dirty}">
+                <select ng-if="emailNotifications.length > 0" class="form-control" name="email" ng-model="product.subscription_set[0].email_notification.email">
+                    <option ng-repeat="emailNotification in emailNotifications" ng-selected="$first">{{ emailNotification.email }}</option>
+                </select>
+                <input ng-if="emailNotifications.length == 0" class="form-control" type="email" name="email" ng-model="product.subscription_set[0].email_notification.email" placeholder="E-Mail" required />
+                <span ng-if="emailNotifications.length > 0" ng-click="openEmailNotificationCreate()" aria-hidden="true" class="glyphicon glyphicon-plus"></span>
+            </div>
+            <div class="col-xs-3 form-group" ng-class="{ 'has-error' : innerForm.subscription_set[0].price_limit.$invalid && innerForm.subscription_set[0].price_limit.$dirty}">
+                <input class="form-control" type="number" name="price" ng-model="product.subscription_set[0].price_limit" required step="0.01" />
+            </div>
+            <div class="col-xs-1">
+                <button class="close" ng-if="newProducts.length > 1" ng-click="removeFormLine(product)" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </ng-form>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <button class="btn" ng-click="addNewProduct()" type="button">Add another</button>
+            <button class="btn btn-primary pull-right" ng-disabled="product_form.$invalid" ng-click="saveNewProducts()" type="submit">Save</button>
+        </div>
+    </div>
+</form>
+

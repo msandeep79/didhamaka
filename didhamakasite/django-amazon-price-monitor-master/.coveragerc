@@ -1,0 +1,2 @@
+[run]
+omit = price_monitor/migrations/*

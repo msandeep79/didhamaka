@@ -1,0 +1,50 @@
+.content {
+    margin-top: 55px;
+}
+
+.media:first-child {
+    /* This is the default */
+    margin-top: 15px;
+}
+
+.media.list a, .media.list a:visited, .media.list a:hover, .media.list a:active {
+    text-decoration: none;
+    color: #000;
+}
+
+.media.list a.pull-left {
+    height: 75px;
+    width: 75px;
+}
+
+.media.list .media-body {
+    margin-left: 85px;
+}
+
+.media.list .media-body img.sparkline {
+    height: 40px;
+    width: 400px;
+}
+
+#product-form .row {
+    margin-top: 5px;
+}
+
+#product-form input,
+#emailnotification-form .form-group,
+#emailnotification-form .form-group input[type="email"] {
+    width: 100%;
+}
+
+#product-form select {
+    display: inline-block;
+    width: 84%;
+}
+
+#product-form span.glyphicon {
+    cursor: pointer;
+}
+
+.responsive-chart {
+    margin-top: 15px;
+}

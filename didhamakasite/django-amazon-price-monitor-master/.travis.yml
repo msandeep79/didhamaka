@@ -1,0 +1,29 @@
+language: python
+sudo: false
+env:
+- TOXENV=py33-django18
+- TOXENV=py34-django18
+- TOXENV=py34-django19
+matrix:
+  include:
+  - python: 3.5
+    env:
+    - TOXENV=py35-django19
+install:
+- pip install codecov tox
+script:
+- tox
+after_success:
+- codecov
+notifications:
+  email: false
+deploy:
+  provider: pypi
+  user: ponyriders
+  password:
+    secure: n04DQkYdiwg+XLVfJd/O3Jil7kUV1GeLK/gqTgAjOlpXmChhI3+2Xzg8hKoWYmtxXLqZu0zpvepHVi/y5Xz2R1va+eNjnQ9XKzZBt6t40+YaMKpUTZsP0fGocJr0imxuqmOOV8YJ7cZ3r4eX+4aUMMq2tE2j6b37MczTfBw1YmM=
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    repo: ponyriders/django-amazon-price-monitor
+    condition: "$TOXENV = py34-django18"
