@@ -27,6 +27,86 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+BROKER_URL = 'amqp://sunny:sunny123@localhost/sunny_vhost'
+CELERY_RESULT_BACKEND = 'db+sqlite:///results.db'
+
+# some additional settings
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_CHORD_PROPAGATES = True
+
+
+REST_FRAMEWORK = {
+    'PAGINATE_BY': 50,
+    'PAGINATE_BY_PARAM': 'page_size',
+    'MAX_PAGINATE_BY': 100,
+}
+
+
+# your Amazon Web Services access key id
+PRICE_MONITOR_AWS_ACCESS_KEY_ID = 'AKIAIAVFEO2KI2W7KNKQ'
+
+# your Amazon Web Services secret access key
+PRICE_MONITOR_AWS_SECRET_ACCESS_KEY = 'ikygajcOT0+pa2t/MOEZtNJVdAz04q/FDSQTMyJI'
+
+# the region endpoint you want to use.
+# Typically the country you'll run the price monitor in.
+# possible values: CA, CN, DE, ES, FR, IT, JP, UK, US
+PRICE_MONITOR_AMAZON_PRODUCT_API_REGION = 'DE'
+
+# the assoc tag of the Amazon Product Advertising API
+PRICE_MONITOR_AMAZON_PRODUCT_API_ASSOC_TAG = 'sparer-21'
+
+# name of you/your site
+PRICE_MONITOR_AMAZON_ASSOCIATE_NAME = 'connectr'
+# Amazon site being used, choose from on of the following
+
+PRICE_MONITOR_AMAZON_ASSOCIATE_SITE = 'Amazon.de'
+# if to use the HTTPS URLs for Amazon images.
+# if you're running the monitor on SSL, set this to True
+# INFO:
+#  Product images are served directly from Amazon.
+#  This is a restriction when using the Amazon Product Advertising API
+PRICE_MONITOR_IMAGES_USE_SSL = False
+
+# domain to use for image serving.
+# typically analog to the api region following the URL pattern
+#  https://images-<REGION>.ssl-images-amazon.com
+PRICE_MONITOR_AMAZON_SSL_IMAGE_DOMAIN = 'https://images-eu.ssl-images-amazon.com'
+
+# time after which products shall be refreshed
+# Amazon only allows caching up to 24 hours, so the maximum value is 1440!
+PRICE_MONITOR_AMAZON_PRODUCT_REFRESH_THRESHOLD_MINUTES = 720  # 12 hours
+
+# time after which to notify the user again about a price limit hit (in minutes)
+PRICE_MONITOR_SUBSCRIPTION_RENOTIFICATION_MINUTES = 10080  # 7 days
+
+# sender address of the notification email
+PRICE_MONITOR_EMAIL_SENDER = 'noreply@localhost'
+
+# currency name to use on notifications
+PRICE_MONITOR_DEFAULT_CURRENCY = 'EUR'
+
+# subject and body of the notification emails
+gettext = lambda x: x
+PRICE_MONITOR_I18N_EMAIL_NOTIFICATION_SUBJECT = gettext(
+    'Price limit for %(product)s reached'
+)
+PRICE_MONITOR_I18N_EMAIL_NOTIFICATION_BODY = gettext(
+    'The price limit of %(price_limit)0.2f %(currency)s has been reached for the '
+    'article "%(product_title)s" - the current price is %(price)0.2f %(currency)s.'
+    '\n\nPlease support our platform by using this '
+    'link for buying: %(link)s\n\n\nRegards,\nThe Team'
+)
+
+# name of the site in notifications
+PRICE_MONITOR_SITENAME = 'Price Monitor'
+
+# key of cache (according to project config) to use for graphs
+# None disables caching.
+PRICE_MONITOR_GRAPH_CACHE_NAME = None
+
+# prefix for cache key used for graphs
+PRICE_MONITOR_GRAPH_CACHE_KEY_PREFIX = 'graph_'
 
 # Application definition
 
