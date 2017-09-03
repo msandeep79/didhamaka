@@ -103,7 +103,7 @@ class ProductAdvertisingAPI(object):
         :return: the values of the item
         :rtype: dict
         """
-        logger.info('starting lookup for ASINs %s', ', '.join(item_ids))
+        logger.info('starting lookup for ASINs SM %s', ', '.join(item_ids))
         item_response = self.lookup_at_amazon(item_ids)
 
         if getattr(item_response, 'items') is None:
@@ -148,6 +148,7 @@ class ProductAdvertisingAPI(object):
 
                 # insert into main dict
                 product_values[item_values['asin']] = item_values
+                logger.info(item_values)
 
             # check if all ASINs are included, if not write error message to log
             failed_asins = []

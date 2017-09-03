@@ -16,7 +16,7 @@ class AngularIndexView(TemplateView):
     template_name = 'price_monitor/angular_index_view.html'
     form = SubscriptionCreationForm
 
-    #@method_decorator(login_required)
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         """
         Overwriting this method the make every instance of the view

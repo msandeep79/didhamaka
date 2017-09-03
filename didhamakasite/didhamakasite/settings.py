@@ -30,9 +30,16 @@ ALLOWED_HOSTS = []
 BROKER_URL = 'amqp://sunny:sunny123@localhost/sunny_vhost'
 CELERY_RESULT_BACKEND = 'db+sqlite:///results.db'
 
-# some additional settings
+# Celery
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+BROKER_URL = os.environ.get('BROKER_URL')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', '')
 CELERY_CHORD_PROPAGATES = True
+# redis specific, see http://celery.readthedocs.org/en/latest/getting-started/brokers/redis.html#caveats
+BROKER_TRANSPORT_OPTIONS = {
+    'fanout_prefix': True,
+    'fanout_patterns': True,
+}
 
 
 REST_FRAMEWORK = {
@@ -201,3 +208,80 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(filename)s %(lineno)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file_error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, '..', 'logs', 'error.log'),
+            'formatter': 'verbose',
+        },
+        'price_monitor': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, '..', 'logs', 'price_monitor.log'),
+            'formatter': 'verbose',
+        },
+        'price_monitor.product_advertising_api': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, '..', 'logs', 'price_monitor.product_advertising_api.log'),
+            'formatter': 'verbose',
+        },
+        'price_monitor.tasks': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, '..', 'logs', 'price_monitor.tasks.log'),
+            'formatter': 'verbose',
+        },
+        'price_monitor.utils': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, '..', 'logs', 'price_monitor.utils.log'),
+            'formatter': 'verbose',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file_error', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'price_monitor': {
+            'handlers': ['price_monitor'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'price_monitor.product_advertising_api': {
+            'handlers': ['price_monitor.product_advertising_api'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'price_monitor.tasks': {
+            'handlers': ['price_monitor.tasks'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'price_monitor.utils': {
+            'handlers': ['price_monitor.utils'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
