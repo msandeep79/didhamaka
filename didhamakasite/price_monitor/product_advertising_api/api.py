@@ -143,12 +143,15 @@ class ProductAdvertisingAPI(object):
                     if item_node.offers is not None and int(item_node.offers.totaloffers.string) > 0:
                         item_values['price'] = float(int(item_node.offers.offer.offerlisting.price.amount.string) / 100)
                         item_values['currency'] = item_node.offers.offer.offerlisting.price.currencycode.string
+
+                   
                 except AttributeError:
                     logger.error('fetching item values from returned XML for ASIN %s failed', item_node.asin)
 
                 # insert into main dict
                 product_values[item_values['asin']] = item_values
-                logger.info(item_values)
+                logger.info("Printing Item item_node")
+                logger.info(item_node)
 
             # check if all ASINs are included, if not write error message to log
             failed_asins = []
